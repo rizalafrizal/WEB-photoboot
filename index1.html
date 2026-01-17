@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fhotobot Studio</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&family=Pinyon+Script&family=Fredoka+One&family=Roboto+Mono:wght@500&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="stylee1.css">
+</head>
+
+<body>
+
+    <div class="studio-card">
+
+        <div class="viewport-section">
+            <div id="cameraView" class="cam-container">
+                <video id="video" autoplay playsinline muted></video>
+                <div class="countdown" id="countdown">3</div>
+                <div class="flash" id="flash"></div>
+            </div>
+            <div id="editorView" class="editor-view">
+                <div class="canvas-wrapper">
+                    <canvas id="finalCanvas"></canvas>
+                    <div id="stickerLayer" class="sticker-layer"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="controls-section">
+            <div class="panel-header">
+                <h1 class="branding">Fhotobot</h1>
+                <p class="sub-branding">Studio Edition</p>
+            </div>
+
+            <div id="cameraControls" class="panel-body">
+
+                <div class="section-group">
+                    <span class="label">Tata Letak</span>
+                    <div class="grid-3">
+                        <button class="btn-opt active" onclick="setLayout('2x2', this)">2x2</button>
+                        <button class="btn-opt" onclick="setLayout('strip', this)">Strip</button>
+                        <button class="btn-opt" onclick="setLayout('wide', this)">Wide</button>
+                    </div>
+                </div>
+
+                <div class="shutter-wrapper">
+                    <button class="shutter-btn" onclick="startSequence()" title="Ambil Foto"></button>
+                </div>
+
+                <div class="section-group">
+                    <span class="label">Filter Kamera</span>
+                    <div class="grid-3">
+                        <button class="btn-opt active" onclick="setFilter('', this)">Normal</button>
+                        <button class="btn-opt" onclick="setFilter('grayscale(100%) contrast(1.1)', this)">B&W</button>
+                        <button class="btn-opt" onclick="setFilter('sepia(0.5) contrast(1.1)', this)">Warm</button>
+                        <button class="btn-opt" onclick="setFilter('saturate(1.5) contrast(1.1)', this)">Vivid</button>
+                        <button class="btn-opt" onclick="setFilter('brightness(1.1) saturate(0.8)', this)">Soft</button>
+                        <button class="btn-opt"
+                            onclick="setFilter('hue-rotate(190deg) contrast(1.2)', this)">Cyber</button>
+                    </div>
+                </div>
+
+                <div class="section-group">
+                    <span class="label">Musik & Suara</span>
+                    <button id="musicControl" class="btn-music-bar" onclick="toggleMusic()">
+                        🎵 Music: ON
+                    </button>
+                </div>
+
+            </div>
+
+            <div id="editorControls" class="panel-body hidden">
+
+                <div class="section-group">
+                    <span class="label">Karakter Favorit</span>
+                    <div class="frame-grid">
+                        <div class="frame-item active" onclick="setFrame('minion', this)">
+                            <div class="preview-content f-minion"></div><span>Minion</span>
+                        </div>
+                        <div class="frame-item" onclick="setFrame('spongebob', this)">
+                            <div class="preview-content f-spongebob"></div><span>Sponge</span>
+                        </div>
+                        <div class="frame-item" onclick="setFrame('patrick', this)">
+                            <div class="preview-content f-patrick"></div><span>Patrick</span>
+                        </div>
+                        <div class="frame-item" onclick="setFrame('mickey', this)">
+                            <div class="preview-content f-mickey"></div><span>Mickey</span>
+                        </div>
+                        <div class="frame-item" onclick="setFrame('spiderman', this)">
+                            <div class="preview-content f-spiderman"></div><span>Spidey</span>
+                        </div>
+                        <div class="frame-item" onclick="setFrame('doraemon', this)">
+                            <div class="preview-content f-doraemon"></div><span>Doraemon</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section-group">
+                    <span class="label">Aesthetic & Classic</span>
+                    <div class="frame-grid">
+                        <div class="frame-item" onclick="setFrame('holo', this)">
+                            <div class="preview-content f-holo"></div><span>Holo</span>
+                        </div>
+                        <div class="frame-item" onclick="setFrame('travel_air', this)">
+                            <div class="preview-content f-travel-air"></div><span>Travel</span>
+                        </div>
+                        <div class="frame-item" onclick="setFrame('blueprint', this)">
+                            <div class="preview-content f-blueprint"></div><span>Blueprt</span>
+                        </div>
+                        <div class="frame-item" onclick="setFrame('retro', this)">
+                            <div class="preview-content f-retro"></div><span>Retro</span>
+                        </div>
+                        <div class="frame-item" onclick="setFrame('cyber', this)">
+                            <div class="preview-content f-cyber"></div><span>Cyber</span>
+                        </div>
+                        <div class="frame-item" onclick="setFrame('film', this)">
+                            <div class="preview-content f-film"></div><span>Film</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section-group">
+                    <span class="label">Dekorasi <small id="sizeLabel">Size: 2.0</small></span>
+                    <div class="sticker-grid">
+                        <div class="sticker-btn" onclick="addSticker('✈️')">✈️</div>
+                        <div class="sticker-btn" onclick="addSticker('🧸')">🧸</div>
+                        <div class="sticker-btn" onclick="addSticker('🍌')">🍌</div>
+                        <div class="sticker-btn" onclick="addSticker('⭐')">⭐</div>
+                        <div class="sticker-btn" onclick="addSticker('🦋')">🦋</div>
+                        <div class="sticker-btn" onclick="addSticker('❤️')">❤️</div>
+                        <div class="sticker-btn" onclick="addSticker('✨')">✨</div>
+                        <div class="sticker-btn" onclick="addSticker('🎀')">🎀</div>
+                        <div class="sticker-btn" onclick="addSticker('👑')">👑</div>
+                        <div class="sticker-btn" onclick="addSticker('😎')">😎</div>
+                    </div>
+                    <input type="range" id="stickerSize" min="0.5" max="5" step="0.1" value="2.0"
+                        oninput="resizeCurrentSticker(this.value)">
+                </div>
+
+                <div class="section-group">
+                    <span class="label">Tulisan / Caption</span>
+                    <input type="text" id="captionText" placeholder="Tulis kenangan disini..." oninput="renderCanvas()">
+                </div>
+
+                <div class="action-group">
+                    <button class="btn-main btn-secondary" onclick="resetToCamera()">Ulangi</button>
+                    <button class="btn-main btn-primary" onclick="saveFinalImage()">Simpan</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <audio id="bgMusic" loop>
+        <source src="Keisya Levronka - Jadi Kekasihku Saja (Official Music Video).mp3" type="audio/mp3">
+    </audio>
+
+    <script src="script1.js"></script>
+</body>
+
+</html>

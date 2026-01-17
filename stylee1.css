@@ -1,0 +1,543 @@
+/* =========================================
+   1. VARIABLES & RESET
+   ========================================= */
+:root {
+    --bg-dark: #050505;
+    --glass-bg: rgba(20, 20, 28, 0.95);
+    --glass-border: rgba(255, 255, 255, 0.1);
+    
+    --accent: #8B5CF6;
+    --accent-glow: rgba(139, 92, 246, 0.5);
+    --accent-secondary: #06b6d4;
+    --accent-gold: #FFD700;
+    
+    --text-primary: #FFFFFF;
+    --text-secondary: #94A3B8;
+}
+
+* {
+    box-sizing: border-box;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+body {
+    font-family: 'Montserrat', sans-serif;
+    background: var(--bg-dark);
+    background-image: 
+        radial-gradient(circle at 15% 50%, rgba(139, 92, 246, 0.15), transparent 25%), 
+        radial-gradient(circle at 85% 30%, rgba(6, 182, 212, 0.15), transparent 25%);
+    color: var(--text-primary);
+    margin: 0;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+/* =========================================
+   2. MAIN LAYOUT (CARD)
+   ========================================= */
+.studio-card {
+    display: flex;
+    width: 98%;
+    max-width: 1400px;
+    height: 96vh;
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: 0 50px 100px -20px rgba(0,0,0,0.9);
+}
+
+/* =========================================
+   3. VIEWPORT SECTION (LEFT)
+   ========================================= */
+.viewport-section {
+    flex: 3;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background: radial-gradient(circle at center, rgba(255,255,255,0.03), transparent 70%);
+}
+
+.cam-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 0 0 1px rgba(255,255,255,0.1), 0 20px 60px rgba(0,0,0,0.7);
+    background: #000;
+}
+
+video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transform: scaleX(-1);
+}
+
+/* Countdown & Flash Effect */
+.countdown {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 18rem;
+    font-weight: 800;
+    opacity: 0;
+    z-index: 10;
+    background: linear-gradient(to bottom, #fff, #a8edea);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 0 40px rgba(139, 92, 246, 0.8));
+    pointer-events: none;
+}
+
+.flash {
+    position: absolute;
+    inset: 0;
+    background: white;
+    opacity: 0;
+    pointer-events: none;
+    z-index: 20;
+}
+.flash.active {
+    animation: flashAnim 0.2s ease-out;
+}
+
+/* Canvas Editor View */
+.editor-view {
+    display: none;
+    width: 100%;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+}
+
+.canvas-wrapper {
+    position: relative;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+    border-radius: 4px; 
+    overflow: hidden;
+    max-height: 90vh;
+    transition: transform 0.3s ease;
+}
+
+canvas {
+    display: block;
+    max-width: 100%;
+    max-height: 90vh;
+    width: auto;
+    height: auto;
+}
+
+/* =========================================
+   4. CONTROLS SECTION (RIGHT)
+   ========================================= */
+.controls-section {
+    flex: 1;
+    min-width: 380px;
+    max-width: 420px;
+    border-left: 1px solid var(--glass-border);
+    display: flex;
+    flex-direction: column;
+    background: rgba(10, 10, 15, 0.6);
+}
+
+.panel-header { 
+    padding: 20px; 
+    border-bottom: 1px solid var(--glass-border); 
+    text-align: center;
+    background: linear-gradient(to bottom, rgba(255,255,255,0.02), transparent);
+}
+
+.branding {
+    font-family: 'Fredoka One', cursive;
+    font-size: 2.5rem;
+    color: var(--accent-gold);
+    margin: 0;
+    line-height: 1;
+    text-shadow: 0 4px 20px rgba(255, 215, 0, 0.2);
+    letter-spacing: 2px;
+}
+
+.sub-branding {
+    margin: 5px 0 0;
+    color: var(--text-secondary);
+    font-size: 0.7rem;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    font-weight: 600;
+}
+
+.panel-body { 
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    scrollbar-width: thin;
+    scrollbar-color: var(--glass-border) transparent;
+}
+
+.section-group {
+    background: rgba(255,255,255,0.02);
+    padding: 15px;
+    border-radius: 16px;
+    border: 1px solid var(--glass-border);
+}
+
+.label {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 1px;
+    color: var(--text-secondary);
+    margin-bottom: 12px;
+    text-transform: uppercase;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    padding-bottom: 5px;
+}
+
+/* Grid Utilities */
+.grid-3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+}
+
+/* =========================================
+   5. BUTTONS & INPUTS
+   ========================================= */
+.btn-opt {
+    padding: 12px;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid var(--glass-border);
+    color: var(--text-secondary);
+    border-radius: 10px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 0.8rem;
+    font-family: 'Montserrat', sans-serif;
+}
+.btn-opt:hover {
+    background: rgba(255,255,255,0.08);
+    color: white;
+    border-color: rgba(255,255,255,0.2);
+}
+.btn-opt.active { 
+    background: var(--accent);
+    color: white;
+    border-color: var(--accent); 
+    box-shadow: 0 0 15px var(--accent-glow); 
+}
+
+/* Shutter Button */
+.shutter-wrapper {
+    display: flex;
+    justify-content: center;
+    margin: 5px 0;
+}
+.shutter-btn {
+    position: relative;
+    width: 75px;
+    height: 75px;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    background: #151515;
+    box-shadow: inset 0 0 10px rgba(0,0,0,0.8), 0 0 0 2px #333, 0 0 0 6px #111, 0 0 30px var(--accent-glow);
+    transition: transform 0.1s;
+}
+.shutter-btn::after {
+    content: '';
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 70%; height: 70%;
+    border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, #fff, var(--accent));
+    box-shadow: 0 0 10px var(--accent);
+}
+.shutter-btn:active { transform: scale(0.92); }
+
+/* Main Action Buttons */
+.action-group {
+    margin-top: auto;
+    display: flex;
+    gap: 12px;
+    padding-top: 20px;
+    border-top: 1px solid var(--glass-border);
+}
+.btn-main { 
+    flex: 1;
+    padding: 16px;
+    border-radius: 12px;
+    border: none;
+    font-weight: 700;
+    cursor: pointer;
+    font-size: 0.85rem; 
+    transition: all 0.3s;
+    font-family: 'Montserrat', sans-serif;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+.btn-primary { 
+    background: linear-gradient(135deg, var(--accent), var(--accent-secondary)); 
+    color: white;
+    box-shadow: 0 4px 15px rgba(139, 92, 246, 0.4); 
+}
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(139, 92, 246, 0.6);
+}
+.btn-secondary {
+    background: transparent;
+    border: 1px solid var(--glass-border);
+    color: var(--text-secondary);
+}
+.btn-secondary:hover {
+    border-color: white;
+    color: white;
+    background: rgba(255,255,255,0.05);
+}
+
+/* Inputs */
+input[type="range"] {
+    width: 100%;
+    accent-color: var(--accent);
+    margin-top: 8px;
+    height: 4px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 10px;
+}
+input[type="text"] {
+    width: 100%;
+    padding: 14px;
+    background: rgba(0,0,0,0.3);
+    border: 1px solid var(--glass-border);
+    border-radius: 12px;
+    color: white;
+    outline: none;
+    transition: 0.3s;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+input[type="text"]:focus {
+    border-color: var(--accent);
+    background: rgba(0,0,0,0.5);
+}
+
+/* =========================================
+   6. FRAME PREVIEW STYLES
+   ========================================= */
+.frame-grid { 
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    padding: 4px;
+}
+.frame-item { 
+    aspect-ratio: 1;
+    border-radius: 12px;
+    cursor: pointer; 
+    border: 2px solid rgba(255,255,255,0.1);
+    background: rgba(0,0,0,0.3);
+    transition: 0.2s;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+.frame-item:hover {
+    transform: translateY(-3px);
+    border-color: rgba(255,255,255,0.5);
+}
+.frame-item.active {
+    border-color: var(--accent-gold);
+    box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.2);
+}
+
+.preview-content {
+    flex: 1;
+    width: 100%;
+    position: relative;
+}
+
+.frame-item span {
+    font-size: 0.65rem;
+    font-weight: 700;
+    background: rgba(0,0,0,0.6); 
+    text-align: center;
+    padding: 6px 0;
+    color: #ddd;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    backdrop-filter: blur(4px);
+    border-top: 1px solid rgba(255,255,255,0.05);
+}
+.frame-item.active span {
+    color: var(--accent-gold);
+    background: rgba(0,0,0,0.9);
+}
+
+/* --- Specific Frame Icons --- */
+/* Karakter */
+/* Karakter */
+.f-minion { 
+    background: linear-gradient(to bottom, #FCE029 70%, #456184 70%);
+    border: 2px solid #333;
+}
+.f-spongebob { 
+    background: linear-gradient(to bottom, #FFF600 75%, #fff 75%, #fff 85%, #8B4513 85%); 
+    border: 2px solid #8B4513; 
+}
+.f-patrick { 
+    background: linear-gradient(to bottom, #FF9B9B 75%, #66CC00 75%);
+    border: 2px solid #C25E9B; 
+}
+.f-mickey { 
+    background: linear-gradient(to bottom, #000 50%, #D90000 50%);
+    border: 2px solid #FFD700; 
+}
+.f-spiderman {
+    background: #D90000;
+    background-image: 
+        repeating-linear-gradient(0deg, transparent, transparent 19px, rgba(0,0,0,0.2) 20px),
+        repeating-linear-gradient(90deg, transparent, transparent 19px, rgba(0,0,0,0.2) 20px);
+    border: 2px solid #0000CD;
+}
+.f-doraemon {
+    background: #009FE3;
+    position: relative;
+    border: 2px solid #D90000;
+}
+.f-doraemon::after {
+    content: '';
+    position: absolute;
+    bottom: -10%; left: 10%; right: 10%; height: 60%;
+    background: #fff;
+    border-radius: 50% 50% 0 0;
+}
+
+/* Aesthetic */
+.f-holo {
+    background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 25%, #fbc2eb 50%, #a6c1ee 75%, #c2e9fb 100%);
+    border: 2px solid rgba(255,255,255,0.5);
+}
+.f-travel-air { background: #fdf3e0; border: 3px dashed #d64545; }
+.f-blueprint {
+    background: #001f3f;
+    border: 2px solid #0074D9;
+    background-image: linear-gradient(rgba(0,116,217,0.3) 1px, transparent 1px), linear-gradient(90deg, rgba(0,116,217,0.3) 1px, transparent 1px);
+    background-size: 10px 10px;
+}
+.f-retro { background: #e8dcb5; border: 2px solid #c0b080; }
+.f-cyber { background: #0f0026; border-top: 2px solid #00ffcc; border-bottom: 2px solid #f0f; }
+.f-film { background: #111; border-left: 3px dotted #555; border-right: 3px dotted #555; }
+
+/* =========================================
+   7. STICKERS & DECORATIONS
+   ========================================= */
+.sticker-grid { 
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 8px; 
+    max-height: 140px;
+    overflow-y: auto;
+    padding: 5px;
+}
+.sticker-btn {
+    font-size: 1.4rem;
+    padding: 8px;
+    background: rgba(255,255,255,0.05);
+    border-radius: 8px; 
+    cursor: pointer;
+    text-align: center;
+    transition: 0.2s;
+}
+.sticker-btn:hover {
+    background: rgba(255,255,255,0.15);
+    transform: scale(1.1);
+}
+
+.sticker-layer {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+}
+.draggable-sticker {
+    position: absolute;
+    font-size: 2rem;
+    cursor: grab;
+    pointer-events: auto;
+    filter: drop-shadow(0 4px 6px rgba(0,0,0,0.4));
+    line-height: 1;
+    padding: 5px;
+    border: 2px solid transparent;
+    transition: transform 0.1s, border-color 0.2s;
+}
+.draggable-sticker:active { cursor: grabbing; transform: scale(1.1); }
+.draggable-sticker.selected {
+    border: 2px dashed rgba(255, 255, 255, 0.8);
+    background: rgba(0,0,0,0.3);
+    border-radius: 8px;
+}
+
+/* Utilities */
+.hidden { display: none !important; }
+.flex { display: flex !important; }
+
+/* Scrollbar Style */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 3px; }
+
+@keyframes flashAnim {
+    0% {opacity:1;}
+    100% {opacity:0;}
+}
+
+/* =========================================
+   8. MUSIC CONTROL (Integrated in Bar)
+   ========================================= */
+.btn-music-bar {
+    width: 100%;
+    padding: 12px;
+    background: rgba(139, 92, 246, 0.2);
+    border: 1px solid rgba(139, 92, 246, 0.4);
+    color: white;
+    border-radius: 12px;
+    cursor: pointer;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    transition: all 0.3s ease;
+}
+
+.btn-music-bar:hover {
+    background: rgba(139, 92, 246, 0.5);
+    box-shadow: 0 0 15px rgba(139, 92, 246, 0.3);
+}
+
+.btn-music-bar.muted {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.1);
+    color: var(--text-secondary);
+}
